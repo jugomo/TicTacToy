@@ -1,4 +1,6 @@
-![#f03c15](https://placehold.it/15/1589F0/000000?text=+TicTacToe)
+```html
+	<font color="blue">TicTacToe</font>
+```
 
 Android aplication created for the course: The complete Kotlin developer course
 
