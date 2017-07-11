@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="center"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.site11.jugomo.tictactoy.MainActivity">
+
+    <TableRow
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <Button
+            android:id="@+id/bt1"
+            android:layout_width="40pt"
+            android:layout_height="40pt"
+            android:layout_margin="3pt"
+            android:onClick="btClick"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/bt2"
+            android:layout_width="40pt"
+            android:layout_height="40pt"
+            android:layout_margin="3pt"
+            android:onClick="btClick"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/bt3"
+            android:layout_width="40pt"
+            android:layout_height="40pt"
+            android:layout_margin="3pt"
+            android:onClick="btClick"
+            android:textSize="20sp" />
+    </TableRow>
+
+    <TableRow
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <Button
+            android:id="@+id/bt4"
+            android:layout_width="40pt"
+            android:layout_height="40pt"
+            android:layout_margin="3pt"
+            android:onClick="btClick"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/bt5"
+            android:layout_width="40pt"
+            android:layout_height="40pt"
+            android:layout_margin="3pt"
+            android:onClick="btClick"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/bt6"
+            android:layout_width="40pt"
+            android:layout_height="40pt"
+            android:layout_margin="3pt"
+            android:onClick="btClick"
+            android:textSize="20sp" />
+    </TableRow>
+
+    <TableRow
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <Button
+            android:id="@+id/bt7"
+            android:layout_width="40pt"
+            android:layout_height="40pt"
+            android:layout_margin="3pt"
+            android:onClick="btClick"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/bt8"
+            android:layout_width="40pt"
+            android:layout_height="40pt"
+            android:layout_margin="3pt"
+            android:onClick="btClick"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/bt9"
+            android:layout_width="40pt"
+            android:layout_height="40pt"
+            android:layout_margin="3pt"
+            android:onClick="btClick"
+            android:textSize="20sp" />
+    </TableRow>
+</TableLayout>
