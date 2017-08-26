@@ -1,99 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:gravity="center"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.site11.jugomo.tictactoy.MainActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.site11.jugomo.tictactoy.MainActivity">
+    android:orientation="vertical">
 
-    <TableRow
-        android:gravity="center"
+    <Button
+        android:id="@+id/btReset"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="wrap_content"
+        android:onClick="resetAction"
+        android:text="Reset" />
 
-        <Button
-            android:id="@+id/bt1"
-            android:layout_width="40pt"
-            android:layout_height="40pt"
-            android:layout_margin="3pt"
-            android:onClick="btClick"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/bt2"
-            android:layout_width="40pt"
-            android:layout_height="40pt"
-            android:layout_margin="3pt"
-            android:onClick="btClick"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/bt3"
-            android:layout_width="40pt"
-            android:layout_height="40pt"
-            android:layout_margin="3pt"
-            android:onClick="btClick"
-            android:textSize="20sp" />
-    </TableRow>
-
-    <TableRow
-        android:gravity="center"
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical|center_horizontal|center">
 
-        <Button
-            android:id="@+id/bt4"
-            android:layout_width="40pt"
-            android:layout_height="40pt"
-            android:layout_margin="3pt"
-            android:onClick="btClick"
-            android:textSize="20sp" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
 
-        <Button
-            android:id="@+id/bt5"
-            android:layout_width="40pt"
-            android:layout_height="40pt"
-            android:layout_margin="3pt"
-            android:onClick="btClick"
-            android:textSize="20sp" />
+            <Button
+                android:id="@+id/bt1"
+                android:layout_width="40pt"
+                android:layout_height="40pt"
+                android:layout_margin="3pt"
+                android:background="@android:color/darker_gray"
+                android:onClick="btClick"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
 
-        <Button
-            android:id="@+id/bt6"
-            android:layout_width="40pt"
-            android:layout_height="40pt"
-            android:layout_margin="3pt"
-            android:onClick="btClick"
-            android:textSize="20sp" />
-    </TableRow>
+            <Button
+                android:id="@+id/bt2"
+                android:layout_width="40pt"
+                android:layout_height="40pt"
+                android:layout_margin="3pt"
+                android:background="@android:color/darker_gray"
+                android:onClick="btClick"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
 
-    <TableRow
-        android:gravity="center"
+            <Button
+                android:id="@+id/bt3"
+                android:layout_width="40pt"
+                android:layout_height="40pt"
+                android:layout_margin="3pt"
+                android:background="@android:color/darker_gray"
+                android:onClick="btClick"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/bt4"
+                android:layout_width="40pt"
+                android:layout_height="40pt"
+                android:layout_margin="3pt"
+                android:background="@android:color/darker_gray"
+                android:onClick="btClick"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/bt5"
+                android:layout_width="40pt"
+                android:layout_height="40pt"
+                android:layout_margin="3pt"
+                android:background="@android:color/darker_gray"
+                android:onClick="btClick"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/bt6"
+                android:layout_width="40pt"
+                android:layout_height="40pt"
+                android:layout_margin="3pt"
+                android:background="@android:color/darker_gray"
+                android:onClick="btClick"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/bt7"
+                android:layout_width="40pt"
+                android:layout_height="40pt"
+                android:layout_margin="3pt"
+                android:background="@android:color/darker_gray"
+                android:onClick="btClick"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/bt8"
+                android:layout_width="40pt"
+                android:layout_height="40pt"
+                android:layout_margin="3pt"
+                android:background="@android:color/darker_gray"
+                android:onClick="btClick"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/bt9"
+                android:layout_width="40pt"
+                android:layout_height="40pt"
+                android:layout_margin="3pt"
+                android:background="@android:color/darker_gray"
+                android:onClick="btClick"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/tvMessage"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <Button
-            android:id="@+id/bt7"
-            android:layout_width="40pt"
-            android:layout_height="40pt"
-            android:layout_margin="3pt"
-            android:onClick="btClick"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/bt8"
-            android:layout_width="40pt"
-            android:layout_height="40pt"
-            android:layout_margin="3pt"
-            android:onClick="btClick"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/bt9"
-            android:layout_width="40pt"
-            android:layout_height="40pt"
-            android:layout_margin="3pt"
-            android:onClick="btClick"
-            android:textSize="20sp" />
-    </TableRow>
-</TableLayout>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:paddingLeft="5pt"
+        android:text="Welcome!"
+        android:textColor="@android:color/black"
+        android:textSize="24sp" />
+</RelativeLayout>
