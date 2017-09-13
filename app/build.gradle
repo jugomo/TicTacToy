@@ -9,8 +9,8 @@ android {
         applicationId "com.site11.jugomo.tictactoy"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 3
-        versionName "1.03"
+        versionCode 4
+        versionName "1.04"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
