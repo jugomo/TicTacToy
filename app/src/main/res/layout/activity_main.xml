@@ -27,30 +27,33 @@
 
             <Button
                 android:id="@+id/bt1"
-                android:layout_width="40pt"
-                android:layout_height="40pt"
+                android:layout_width="@dimen/cell_size"
+                android:layout_height="@dimen/cell_size"
                 android:layout_margin="3pt"
                 android:background="@android:color/darker_gray"
+                android:contentDescription="1"
                 android:onClick="btClick"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
 
             <Button
                 android:id="@+id/bt2"
-                android:layout_width="40pt"
-                android:layout_height="40pt"
+                android:layout_width="@dimen/cell_size"
+                android:layout_height="@dimen/cell_size"
                 android:layout_margin="3pt"
                 android:background="@android:color/darker_gray"
+                android:contentDescription="2"
                 android:onClick="btClick"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
 
             <Button
                 android:id="@+id/bt3"
-                android:layout_width="40pt"
-                android:layout_height="40pt"
+                android:layout_width="@dimen/cell_size"
+                android:layout_height="@dimen/cell_size"
                 android:layout_margin="3pt"
                 android:background="@android:color/darker_gray"
+                android:contentDescription="3"
                 android:onClick="btClick"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
@@ -63,30 +66,33 @@
 
             <Button
                 android:id="@+id/bt4"
-                android:layout_width="40pt"
-                android:layout_height="40pt"
+                android:layout_width="@dimen/cell_size"
+                android:layout_height="@dimen/cell_size"
                 android:layout_margin="3pt"
                 android:background="@android:color/darker_gray"
+                android:contentDescription="4"
                 android:onClick="btClick"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
 
             <Button
                 android:id="@+id/bt5"
-                android:layout_width="40pt"
-                android:layout_height="40pt"
+                android:layout_width="@dimen/cell_size"
+                android:layout_height="@dimen/cell_size"
                 android:layout_margin="3pt"
                 android:background="@android:color/darker_gray"
+                android:contentDescription="5"
                 android:onClick="btClick"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
 
             <Button
                 android:id="@+id/bt6"
-                android:layout_width="40pt"
-                android:layout_height="40pt"
+                android:layout_width="@dimen/cell_size"
+                android:layout_height="@dimen/cell_size"
                 android:layout_margin="3pt"
                 android:background="@android:color/darker_gray"
+                android:contentDescription="6"
                 android:onClick="btClick"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
@@ -99,30 +105,33 @@
 
             <Button
                 android:id="@+id/bt7"
-                android:layout_width="40pt"
-                android:layout_height="40pt"
+                android:layout_width="@dimen/cell_size"
+                android:layout_height="@dimen/cell_size"
                 android:layout_margin="3pt"
                 android:background="@android:color/darker_gray"
+                android:contentDescription="7"
                 android:onClick="btClick"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
 
             <Button
                 android:id="@+id/bt8"
-                android:layout_width="40pt"
-                android:layout_height="40pt"
+                android:layout_width="@dimen/cell_size"
+                android:layout_height="@dimen/cell_size"
                 android:layout_margin="3pt"
                 android:background="@android:color/darker_gray"
+                android:contentDescription="8"
                 android:onClick="btClick"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
 
             <Button
                 android:id="@+id/bt9"
-                android:layout_width="40pt"
-                android:layout_height="40pt"
+                android:layout_width="@dimen/cell_size"
+                android:layout_height="@dimen/cell_size"
                 android:layout_margin="3pt"
                 android:background="@android:color/darker_gray"
+                android:contentDescription="9"
                 android:onClick="btClick"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />

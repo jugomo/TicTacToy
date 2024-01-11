@@ -1,20 +1,22 @@
 package com.site11.jugomo.tictactoy
 
+import android.annotation.SuppressLint
 import android.graphics.Color
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_main.*
+import androidx.appcompat.app.AppCompatActivity
+import com.site11.jugomo.tictactoy.databinding.ActivityMainBinding
 import java.util.*
 
+@SuppressLint("SetTextI18n")
 class MainActivity : AppCompatActivity() {
 
-    var player1 = ArrayList<Int>()
-    var player2 = ArrayList<Int>()
-    var active = 1
-    var finished = false
+    private lateinit var binding: ActivityMainBinding
+    private var player1 = ArrayList<Int>()
+    private var player2 = ArrayList<Int>()
+    private var active = 1
+    private var finished = false
 
     //
     //
@@ -22,50 +24,53 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        btReset.isEnabled = false
+        binding.btReset.isEnabled = false
     }
 
     fun resetAction(view: View) {
 
-        bt1.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
-        bt2.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
-        bt3.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
-        bt4.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
-        bt5.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
-        bt6.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
-        bt7.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
-        bt8.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
-        bt9.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
+        binding.bt1.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
+        binding.bt2.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
+        binding.bt3.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
+        binding.bt4.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
+        binding.bt5.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
+        binding.bt6.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
+        binding.bt7.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
+        binding.bt8.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
+        binding.bt9.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
 
-        bt1.setText("")
-        bt2.setText("")
-        bt3.setText("")
-        bt4.setText("")
-        bt5.setText("")
-        bt6.setText("")
-        bt7.setText("")
-        bt8.setText("")
-        bt9.setText("")
+        binding.bt1.text = ""
+        binding.bt2.text = ""
+        binding.bt3.text = ""
+        binding.bt4.text = ""
+        binding.bt5.text = ""
+        binding.bt6.text = ""
+        binding.bt7.text = ""
+        binding.bt8.text = ""
+        binding.bt9.text = ""
 
-        bt1.isEnabled = true
-        bt2.isEnabled = true
-        bt3.isEnabled = true
-        bt4.isEnabled = true
-        bt5.isEnabled = true
-        bt6.isEnabled = true
-        bt7.isEnabled = true
-        bt8.isEnabled = true
-        bt9.isEnabled = true
 
-        btReset.isEnabled = false
+        binding.bt1.isEnabled = true
+        binding.bt2.isEnabled = true
+        binding.bt3.isEnabled = true
+        binding.bt4.isEnabled = true
+        binding.bt5.isEnabled = true
+        binding.bt6.isEnabled = true
+        binding.bt7.isEnabled = true
+        binding.bt8.isEnabled = true
+        binding.bt9.isEnabled = true
+
+        binding.btReset.isEnabled = false
         finished = false
         player1.clear()
         player2.clear()
 
-        tvMessage.text = "Welcome!"
-        tvMessage.setTextColor(Color.BLACK)
+        binding.tvMessage.text = "Welcome!"
+        binding.tvMessage.setTextColor(Color.BLACK)
     }
 
     fun btClick(view: View) {
@@ -91,7 +96,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun playGame(cellID: Int, sel: Button) {
+    private fun playGame(cellID: Int, sel: Button) {
         if (active == 1) {
             sel.text = "X"
             sel.setBackgroundColor(Color.GREEN)
@@ -99,7 +104,7 @@ class MainActivity : AppCompatActivity() {
             active = 2
 
             autoPlay()
-       } else {
+        } else {
             sel.text = "O"
             sel.setBackgroundColor(Color.BLUE)
             player2.add(cellID)
@@ -111,7 +116,7 @@ class MainActivity : AppCompatActivity() {
         checkWinner()
     }
 
-    fun checkWinner() {
+    private fun checkWinner() {
         var winner = -1
 
         // row 1
@@ -166,14 +171,14 @@ class MainActivity : AppCompatActivity() {
         // there is a winner
         if (winner != -1) {
             if (winner == 1) {
-                tvMessage.text = "YOU WON!"
-                tvMessage.setTextColor(Color.GREEN)
+                binding.tvMessage.text = "YOU WON!"
+                binding.tvMessage.setTextColor(Color.GREEN)
             } else {
-                tvMessage.text = "PLAYER 2 WON!"
-                tvMessage.setTextColor(Color.RED)
+                binding.tvMessage.text = "PLAYER 2 WON!"
+                binding.tvMessage.setTextColor(Color.RED)
             }
 
-            btReset.isEnabled = true
+            binding.btReset.isEnabled = true
             finished = true
         } else {
             if (emptyCells().size == 0) {
@@ -182,27 +187,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun autoPlay() {
+    private fun autoPlay() {
         val num = emptyCells()
 
         if (num.size != 0) {
             val r = Random()
             val randIndex = r.nextInt(num.size - 0) + 0
-            val cellID = num.get(randIndex)
+            val cellID = num[randIndex]
 
-            var btSelect: Button?
-            when (cellID) {
-                1 -> btSelect = bt1
-                2 -> btSelect = bt2
-                3 -> btSelect = bt3
-                4 -> btSelect = bt4
-                5 -> btSelect = bt5
-                6 -> btSelect = bt6
-                7 -> btSelect = bt7
-                8 -> btSelect = bt8
-                9 -> btSelect = bt9
+            val btSelect: Button = when (cellID) {
+                1 -> binding.bt1
+                2 -> binding.bt2
+                3 -> binding.bt3
+                4 -> binding.bt4
+                5 -> binding.bt5
+                6 -> binding.bt6
+                7 -> binding.bt7
+                8 -> binding.bt8
+                9 -> binding.bt9
                 else -> {
-                    btSelect = bt1
+                    binding.bt1
                 }
             }
 
@@ -212,8 +216,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun emptyCells() : ArrayList<Int> {
-        var emptyCells = ArrayList<Int>()
+    private fun emptyCells(): ArrayList<Int> {
+        val emptyCells = ArrayList<Int>()
 
         for (cellID in 1..9) {
             if (!(player1.contains(cellID) || player2.contains(cellID))) {
@@ -224,10 +228,10 @@ class MainActivity : AppCompatActivity() {
         return emptyCells
     }
 
-    fun gameOver() {
-        tvMessage.text = "GAME OUT! - NOBODY WON"
-        tvMessage.setTextColor(Color.RED)
-        btReset.isEnabled = true
+    private fun gameOver() {
+        binding.tvMessage.text = "GAME OUT! - NOBODY WON"
+        binding.tvMessage.setTextColor(Color.RED)
+        binding.btReset.isEnabled = true
         finished = true
     }
 }
