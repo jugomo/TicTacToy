@@ -1,10 +1,20 @@
 package com.site11.jugomo.tictactoy
 
+import android.animation.ObjectAnimator
+import android.graphics.drawable.GradientDrawable
+import android.widget.FrameLayout
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
-import android.widget.Button
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.LinearInterpolator
+import android.view.animation.OvershootInterpolator
+import android.widget.ImageButton
+import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import com.site11.jugomo.tictactoy.databinding.ActivityMainBinding
 import java.util.*
@@ -17,66 +27,135 @@ class MainActivity : AppCompatActivity() {
     private var player2 = ArrayList<Int>()
     private var active = 1
     private var finished = false
+    private var difficulty = 0 // 0=Fácil, 1=Medio, 2=Difícil
 
-    //
-    //
-    //
+    private var gameMode = 0 // 0 = vs IA, 1 = P1 vs P2
+    private var thinking = false
+    private var thinkingAnimator: ObjectAnimator? = null
+    private val handler = Handler(Looper.getMainLooper())
+    private var pendingAutoPlay: Runnable? = null
+    private val winAnimators = mutableListOf<ObjectAnimator>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        setContentView(binding.root)
 
-        binding.btReset.isEnabled = false
+        binding.seekDifficulty.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                difficulty = progress
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+        updateModeButton()
+        updateResetButton()
+    }
+
+    private fun updateResetButton() {
+        val hasMove = player1.isNotEmpty() || player2.isNotEmpty()
+        binding.btReset.isEnabled = hasMove
+        binding.btReset.alpha = if (hasMove) 1f else 0.35f
+    }
+
+    fun modeToggleClick(view: View) {
+        gameMode = if (gameMode == 0) 1 else 0
+        updateModeButton()
+        resetAction(binding.btReset)
+    }
+
+    private fun updateModeButton() {
+        binding.btMode.text = getString(if (gameMode == 0) R.string.mode_vs_ia else R.string.mode_vs_p2)
+        binding.difficultyLayout.visibility = if (gameMode == 0) View.VISIBLE else View.GONE
     }
 
     fun resetAction(view: View) {
+        pendingAutoPlay?.let { handler.removeCallbacks(it) }
+        pendingAutoPlay = null
+        hideThinking()
 
-        binding.bt1.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
-        binding.bt2.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
-        binding.bt3.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
-        binding.bt4.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
-        binding.bt5.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
-        binding.bt6.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
-        binding.bt7.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
-        binding.bt8.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
-        binding.bt9.setBackgroundColor(resources.getColor(android.R.color.darker_gray))
+        val cells = listOf(
+            binding.bt1, binding.bt2, binding.bt3,
+            binding.bt4, binding.bt5, binding.bt6,
+            binding.bt7, binding.bt8, binding.bt9
+        )
 
-        binding.bt1.text = ""
-        binding.bt2.text = ""
-        binding.bt3.text = ""
-        binding.bt4.text = ""
-        binding.bt5.text = ""
-        binding.bt6.text = ""
-        binding.bt7.text = ""
-        binding.bt8.text = ""
-        binding.bt9.text = ""
+        val playedCells = cells.filterIndexed { i, _ -> (i + 1) in player1 || (i + 1) in player2 }
 
+        if (playedCells.isEmpty()) {
+            doReset(cells)
+            return
+        }
 
-        binding.bt1.isEnabled = true
-        binding.bt2.isEnabled = true
-        binding.bt3.isEnabled = true
-        binding.bt4.isEnabled = true
-        binding.bt5.isEnabled = true
-        binding.bt6.isEnabled = true
-        binding.bt7.isEnabled = true
-        binding.bt8.isEnabled = true
-        binding.bt9.isEnabled = true
+        view.isEnabled = false
 
-        binding.btReset.isEnabled = false
+        val dist = resources.displayMetrics.run { maxOf(widthPixels, heightPixels) }.toFloat() * 1.5f
+        // Direction each cell flies: row-major order, pointing outward from center
+        val dirX = floatArrayOf(-1f,  0f, 1f, -1f, 0f, 1f, -1f,  0f, 1f)
+        val dirY = floatArrayOf(-1f, -1f, -1f, 0f, 0f, 0f,  1f,  1f, 1f)
+        val rng = Random()
+        var completed = 0
+
+        cells.forEachIndexed { i, cell ->
+            if ((i + 1) !in player1 && (i + 1) !in player2) return@forEachIndexed
+
+            val dx = if (i == 4) (if (rng.nextBoolean()) -1f else 1f) else dirX[i]
+            val dy = if (i == 4) (if (rng.nextBoolean()) -1f else 1f) else dirY[i]
+
+            cell.animate()
+                .translationX(dx * dist)
+                .translationY(dy * dist)
+                .alpha(0f)
+                .scaleX(0.2f)
+                .scaleY(0.2f)
+                .rotation(dx * 540f)
+                .setDuration(500)
+                .setInterpolator(AccelerateInterpolator())
+                .withEndAction {
+                    completed++
+                    if (completed == playedCells.size) {
+                        doReset(cells)
+                        view.isEnabled = true
+                    }
+                }
+                .start()
+        }
+    }
+
+    private fun doReset(cells: List<ImageButton>) {
+        winAnimators.forEach { it.cancel() }
+        winAnimators.clear()
+        cells.forEach { cell ->
+            cell.setImageDrawable(null)
+            (cell.parent as? FrameLayout)?.setBackgroundResource(R.drawable.cell_button_bg)
+            cell.isEnabled = true
+            cell.translationX = 0f
+            cell.translationY = 0f
+            cell.alpha = 1f
+            cell.rotation = 0f
+            cell.rotationY = 0f
+            cell.scaleX = 1f
+            cell.scaleY = 1f
+        }
+        active = 1
         finished = false
         player1.clear()
         player2.clear()
+        binding.tvMessage.text = getString(R.string.msg_welcome)
+        binding.tvMessage.setTextColor(Color.WHITE)
+        updateTurnMessage()
+        updateResetButton()
+    }
 
-        binding.tvMessage.text = "Welcome!"
-        binding.tvMessage.setTextColor(Color.BLACK)
+    private fun updateTurnMessage() {
+        if (gameMode != 1 || finished) return
+        binding.tvMessage.text = getString(if (active == 1) R.string.msg_turn_p1 else R.string.msg_turn_p2)
+        binding.tvMessage.setTextColor(Color.WHITE)
     }
 
     fun btClick(view: View) {
-        if (!finished) {
-            val btSel = view as Button
-
+        if (!finished && !thinking) {
+            val btSel = view as ImageButton
             var cellId = 0
             when (btSel.id) {
                 R.id.bt1 -> cellId = 1
@@ -89,149 +168,213 @@ class MainActivity : AppCompatActivity() {
                 R.id.bt8 -> cellId = 8
                 R.id.bt9 -> cellId = 9
             }
-
-            //Toast.makeText(this, "ID: " + cellId, Toast.LENGTH_LONG).show()
-
             playGame(cellId, btSel)
         }
     }
 
-    private fun playGame(cellID: Int, sel: Button) {
+    private fun playGame(cellID: Int, sel: ImageButton) {
         if (active == 1) {
-            sel.text = "X"
-            sel.setBackgroundColor(Color.GREEN)
+            sel.setImageResource(R.drawable.x_icon)
+            (sel.parent as FrameLayout).background = blackCellBg()
+            animatePiece(sel)
             player1.add(cellID)
-            active = 2
-
-            autoPlay()
-        } else {
-            sel.text = "O"
-            sel.setBackgroundColor(Color.BLUE)
-            player2.add(cellID)
-            active = 1
-
-        }
-
-        sel.isEnabled = false
-        checkWinner()
-    }
-
-    private fun checkWinner() {
-        var winner = -1
-
-        // row 1
-        if (player1.contains(1) && player1.contains(2) && player1.contains(3)) {
-            winner = 1
-        }
-        if (player2.contains(1) && player2.contains(2) && player2.contains(3)) {
-            winner = 2
-        }
-
-        // row 2
-        if (player1.contains(4) && player1.contains(5) && player1.contains(6)) {
-            winner = 1
-        }
-        if (player2.contains(4) && player2.contains(5) && player2.contains(6)) {
-            winner = 2
-        }
-
-        // row 3
-        if (player1.contains(7) && player1.contains(8) && player1.contains(9)) {
-            winner = 1
-        }
-        if (player2.contains(7) && player2.contains(8) && player2.contains(9)) {
-            winner = 2
-        }
-
-
-        // col 1
-        if (player1.contains(1) && player1.contains(4) && player1.contains(7)) {
-            winner = 1
-        }
-        if (player2.contains(1) && player2.contains(4) && player2.contains(7)) {
-            winner = 2
-        }
-
-        // col 2
-        if (player1.contains(2) && player1.contains(5) && player1.contains(8)) {
-            winner = 1
-        }
-        if (player2.contains(2) && player2.contains(5) && player2.contains(8)) {
-            winner = 2
-        }
-
-        // col 3
-        if (player1.contains(3) && player1.contains(6) && player1.contains(9)) {
-            winner = 1
-        }
-        if (player2.contains(3) && player2.contains(6) && player2.contains(9)) {
-            winner = 2
-        }
-
-        // there is a winner
-        if (winner != -1) {
-            if (winner == 1) {
-                binding.tvMessage.text = "YOU WON!"
-                binding.tvMessage.setTextColor(Color.GREEN)
-            } else {
-                binding.tvMessage.text = "PLAYER 2 WON!"
-                binding.tvMessage.setTextColor(Color.RED)
-            }
-
-            binding.btReset.isEnabled = true
-            finished = true
-        } else {
-            if (emptyCells().size == 0) {
-                gameOver()
-            }
-        }
-    }
-
-    private fun autoPlay() {
-        val num = emptyCells()
-
-        if (num.size != 0) {
-            val r = Random()
-            val randIndex = r.nextInt(num.size - 0) + 0
-            val cellID = num[randIndex]
-
-            val btSelect: Button = when (cellID) {
-                1 -> binding.bt1
-                2 -> binding.bt2
-                3 -> binding.bt3
-                4 -> binding.bt4
-                5 -> binding.bt5
-                6 -> binding.bt6
-                7 -> binding.bt7
-                8 -> binding.bt8
-                9 -> binding.bt9
-                else -> {
-                    binding.bt1
+            updateResetButton()
+            sel.isEnabled = false
+            checkWinner()
+            if (!finished) {
+                active = 2
+                updateTurnMessage()
+                if (gameMode == 0) {
+                    showThinking()
+                    pendingAutoPlay = Runnable {
+                        pendingAutoPlay = null
+                        hideThinking()
+                        autoPlay()
+                    }
+                    handler.postDelayed(pendingAutoPlay!!, 800)
                 }
             }
-
-            playGame(cellID, btSelect)
         } else {
-            gameOver()
+            sel.setImageResource(R.drawable.o_icon)
+            (sel.parent as FrameLayout).background = blackCellBg()
+            animatePiece(sel)
+            player2.add(cellID)
+            active = 1
+            sel.isEnabled = false
+            checkWinner()
+            updateTurnMessage()
+        }
+    }
+
+    private fun blackCellBg(): GradientDrawable {
+        val density = resources.displayMetrics.density
+        return GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            setColor(Color.BLACK)
+            cornerRadius = 10f * density
+            setStroke((2f * density).toInt(), Color.argb(170, 255, 255, 255))
+        }
+    }
+
+    private fun showThinking() {
+        thinking = true
+        binding.thinkingLayout.visibility = View.VISIBLE
+        thinkingAnimator = ObjectAnimator.ofFloat(binding.tvHourglass, "rotationY", 0f, 360f).apply {
+            duration = 900
+            repeatCount = ObjectAnimator.INFINITE
+            interpolator = LinearInterpolator()
+            start()
+        }
+    }
+
+    private fun hideThinking() {
+        thinking = false
+        thinkingAnimator?.cancel()
+        thinkingAnimator = null
+        binding.thinkingLayout.visibility = View.GONE
+        binding.tvHourglass.rotationY = 0f
+    }
+
+    private fun animatePiece(cell: ImageButton) {
+        cell.scaleX = 0f
+        cell.scaleY = 0f
+        cell.alpha = 0f
+        cell.animate()
+            .scaleX(1f)
+            .scaleY(1f)
+            .alpha(1f)
+            .setDuration(800)
+            .setInterpolator(OvershootInterpolator())
+            .start()
+    }
+
+    // --- AI ---
+
+    private fun autoPlay() {
+        val empty = emptyCells()
+        if (empty.isEmpty()) { gameOver(); return }
+
+        val cellID = when (difficulty) {
+            2 -> bestMoveHard()
+            1 -> bestMoveMedium(empty)
+            else -> empty[Random().nextInt(empty.size)]
+        }
+
+        val btSelect: ImageButton = when (cellID) {
+            1 -> binding.bt1
+            2 -> binding.bt2
+            3 -> binding.bt3
+            4 -> binding.bt4
+            5 -> binding.bt5
+            6 -> binding.bt6
+            7 -> binding.bt7
+            8 -> binding.bt8
+            else -> binding.bt9
+        }
+        playGame(cellID, btSelect)
+    }
+
+    // Gana si puede, bloquea si el humano va a ganar, si no aleatorio
+    private fun bestMoveMedium(empty: ArrayList<Int>): Int {
+        return findWinningMove(player2)
+            ?: findWinningMove(player1)
+            ?: empty[Random().nextInt(empty.size)]
+    }
+
+    // Devuelve la celda ganadora para `positions` si existe
+    private fun findWinningMove(positions: ArrayList<Int>): Int? {
+        return emptyCells().firstOrNull { cell ->
+            checkWinList(ArrayList(positions).also { it.add(cell) })
+        }
+    }
+
+    // Minimax: devuelve la mejor celda para la IA (player2)
+    private fun bestMoveHard(): Int {
+        var bestVal = Int.MIN_VALUE
+        var bestMove = emptyCells()[0]
+        for (move in emptyCells()) {
+            val score = minimax(player1, ArrayList(player2).also { it.add(move) }, false)
+            if (score > bestVal) {
+                bestVal = score
+                bestMove = move
+            }
+        }
+        return bestMove
+    }
+
+    private fun minimax(p1: List<Int>, p2: List<Int>, isMaximizing: Boolean): Int {
+        if (checkWinList(p2)) return 10
+        if (checkWinList(p1)) return -10
+        val available = (1..9).filter { !p1.contains(it) && !p2.contains(it) }
+        if (available.isEmpty()) return 0
+
+        return if (isMaximizing) {
+            available.maxOf { minimax(p1, p2 + it, false) }
+        } else {
+            available.minOf { minimax(p1 + it, p2, true) }
+        }
+    }
+
+    private fun animateWin() {
+        val allCells = listOf(
+            binding.bt1, binding.bt2, binding.bt3,
+            binding.bt4, binding.bt5, binding.bt6,
+            binding.bt7, binding.bt8, binding.bt9
+        )
+        player1.forEach { id ->
+            ObjectAnimator.ofFloat(allCells[id - 1], "rotation", 0f, 360f).apply {
+                duration = 700
+                repeatCount = ObjectAnimator.INFINITE
+                interpolator = LinearInterpolator()
+                start()
+            }.also { winAnimators.add(it) }
+        }
+        player2.forEach { id ->
+            ObjectAnimator.ofFloat(allCells[id - 1], "rotationY", 0f, 360f).apply {
+                duration = 700
+                repeatCount = ObjectAnimator.INFINITE
+                interpolator = LinearInterpolator()
+                start()
+            }.also { winAnimators.add(it) }
+        }
+    }
+
+    // --- Win check ---
+
+    private val winCombos = listOf(
+        listOf(1,2,3), listOf(4,5,6), listOf(7,8,9),
+        listOf(1,4,7), listOf(2,5,8), listOf(3,6,9),
+        listOf(1,5,9), listOf(3,5,7)
+    )
+
+    private fun checkWinList(positions: List<Int>) =
+        winCombos.any { positions.containsAll(it) }
+
+    private fun checkWinner() {
+        when {
+            checkWinList(player1) -> {
+                binding.tvMessage.text = getString(if (gameMode == 0) R.string.msg_you_won else R.string.msg_p1_won)
+                binding.tvMessage.setTextColor(Color.GREEN)
+                finished = true
+                animateWin()
+            }
+            checkWinList(player2) -> {
+                binding.tvMessage.text = getString(if (gameMode == 0) R.string.msg_ai_won else R.string.msg_p2_won)
+                binding.tvMessage.setTextColor(Color.RED)
+                finished = true
+                animateWin()
+            }
+            emptyCells().isEmpty() -> gameOver()
         }
     }
 
     private fun emptyCells(): ArrayList<Int> {
-        val emptyCells = ArrayList<Int>()
-
-        for (cellID in 1..9) {
-            if (!(player1.contains(cellID) || player2.contains(cellID))) {
-                emptyCells.add(cellID)
-            }
-        }
-
-        return emptyCells
+        return ArrayList((1..9).filter { !player1.contains(it) && !player2.contains(it) })
     }
 
     private fun gameOver() {
-        binding.tvMessage.text = "GAME OUT! - NOBODY WON"
+        binding.tvMessage.text = getString(R.string.msg_draw)
         binding.tvMessage.setTextColor(Color.RED)
-        binding.btReset.isEnabled = true
         finished = true
     }
 }

@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "android",
+            "name": "Run Android App (Debug)",
+            "request": "launch",
+            "appSrcRoot": "${workspaceRoot}/app/src/main",
+            "apkFile": "${workspaceRoot}/app/build/outputs/apk/debug/app-debug.apk",
+            "adbPort": 5037,
+            "preLaunchTask": "Assemble Debug APK"
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        }
+    ]
+}

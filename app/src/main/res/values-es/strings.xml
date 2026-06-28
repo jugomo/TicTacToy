@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TicTacToy</string>
+    <string name="title">Tic Tac Toy</string>
+    <string name="btn_reset">Reset</string>
+    <string name="mode_vs_ia">P1 vs IA</string>
+    <string name="mode_vs_p2">P1 vs P2</string>
+    <string name="difficulty_easy">Fácil</string>
+    <string name="difficulty_medium">Medio</string>
+    <string name="difficulty_hard">Difícil</string>
+    <string name="thinking">Pensando…</string>
+    <string name="msg_welcome">¡Bienvenido!</string>
+    <string name="msg_you_won">¡Has ganado!</string>
+    <string name="msg_p1_won">¡Gana P1!</string>
+    <string name="msg_ai_won">¡Gana la IA!</string>
+    <string name="msg_p2_won">¡Gana P2!</string>
+    <string name="msg_draw">¡Empate! Nadie gana</string>
+    <string name="msg_turn_p1">Turno P1</string>
+    <string name="msg_turn_p2">Turno P2</string>
+</resources>

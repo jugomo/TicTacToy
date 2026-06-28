@@ -1,0 +1,53 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Assemble Debug APK",
+            "type": "shell",
+            "command": "./gradlew assembleDebug",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Install & Run on Device",
+            "type": "shell",
+            "command": "./gradlew installDebug && adb shell am start -n com.site11.jugomo.tictactoy/.MainActivity",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "dependsOn": []
+        },
+        {
+            "label": "Clean Project",
+            "type": "shell",
+            "command": "./gradlew clean",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Show Connected Devices",
+            "type": "shell",
+            "command": "adb devices",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        }
+    ]
+}

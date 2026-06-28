@@ -1,6 +1,12 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     compileSdk = 36
     buildToolsVersion = '35.0.0'
@@ -8,12 +14,21 @@ android {
         applicationId "com.site11.jugomo.tictactoy"
         minSdk 23
         targetSdk 35
-        versionCode 6
-        versionName "1.06"
+        versionCode 7
+        versionName "1.07"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
     }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             multiDexEnabled true
