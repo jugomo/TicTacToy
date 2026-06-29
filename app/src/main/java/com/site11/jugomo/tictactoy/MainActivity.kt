@@ -16,6 +16,7 @@ import android.view.animation.OvershootInterpolator
 import android.widget.ImageButton
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import com.site11.jugomo.tictactoy.databinding.ActivityMainBinding
 import java.util.*
 
@@ -38,6 +39,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        @Suppress("DEPRECATION")
+        window.statusBarColor = Color.TRANSPARENT
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

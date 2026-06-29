@@ -324,21 +324,13 @@
             android:layout_below="@id/grid"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="14dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
+            android:gravity="center"
+            android:orientation="vertical"
             android:visibility="gone">
 
             <TextView
-                android:id="@+id/tvHourglass"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="⏳"
-                android:textSize="24sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:shadowColor="#000000"
                 android:shadowDx="1"
                 android:shadowDy="1"
@@ -347,6 +339,15 @@
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/tvHourglass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="⏳"
+                android:textColor="#FFFFFF"
+                android:textSize="48sp" />
 
         </LinearLayout>
 
