@@ -48,6 +48,22 @@
                 "panel": "shared"
             },
             "problemMatcher": []
+        },
+        {
+            "label": "Start Emulator",
+            "type": "shell",
+            "command": "if adb devices | grep -v 'List of devices' | grep -v '^emulator' | grep -q 'device$'; then echo 'Physical device detected, skipping emulator'; else adb devices | grep -q 'emulator' || (nohup $HOME/Library/Android/sdk/emulator/emulator -avd Pixel_10_Pro_XL -no-snapshot-load > /dev/null 2>&1 & disown); adb wait-for-device; until adb shell getprop sys.boot_completed 2>/dev/null | grep -q '1'; do sleep 2; done; echo 'Emulator ready'; fi",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Prepare Debug Launch",
+            "dependsOn": ["Start Emulator", "Assemble Debug APK"],
+            "dependsOrder": "parallel",
+            "problemMatcher": []
         }
     ]
 }
