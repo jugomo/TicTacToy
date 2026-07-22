@@ -9,13 +9,13 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     compileSdk = 36
-    buildToolsVersion = '35.0.0'
+    buildToolsVersion = '36.0.0'
     defaultConfig {
         applicationId "com.site11.jugomo.tictactoy"
         minSdk 23
-        targetSdk 35
-        versionCode 8
-        versionName "1.08"
+        targetSdk 36
+        versionCode 9
+        versionName "1.09"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     signingConfigs {
@@ -30,7 +30,7 @@ android {
         release {
             signingConfig signingConfigs.release
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             multiDexEnabled true
         }
     }
@@ -39,10 +39,11 @@ android {
     }
     namespace 'com.site11.jugomo.tictactoy'
     compileOptions {
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = '11'
     }
 }
 
